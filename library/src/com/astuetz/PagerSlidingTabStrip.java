@@ -171,6 +171,13 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         paddingRight = padding > 0 ? padding : a.getDimensionPixelSize(PADDING_RIGHT_INDEX, 0);
         a.recycle();
 
+        // Use Roboto Medium as the default typeface from API 21 onwards
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tabTypefaceName = "sans-serif-medium";
+            tabTypefaceStyle = Typeface.NORMAL;
+            tabTypefaceSelectedStyle = Typeface.NORMAL;
+        }
+
         // get custom attrs
         a = context.obtainStyledAttributes(attrs, R.styleable.PagerSlidingTabStrip);
         indicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, indicatorColor);
