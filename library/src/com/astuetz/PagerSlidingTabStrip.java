@@ -359,8 +359,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (isPaddingMiddle || paddingLeft > 0 || paddingRight > 0) {
+            int width;
+
+            if (isPaddingMiddle) {
+                width = getWidth();
+            } else {
+                // Account for manually set padding for offsetting tab start and end positions.
+                width = getWidth() - paddingLeft - paddingRight;
+            }
+
             //Make sure tabContainer is bigger than the HorizontalScrollView to be able to scroll
-            tabsContainer.setMinimumWidth(getWidth());
+            tabsContainer.setMinimumWidth(width);
             //Clipping padding to false to see the tabs while we pass them swiping
             setClipToPadding(false);
         }
