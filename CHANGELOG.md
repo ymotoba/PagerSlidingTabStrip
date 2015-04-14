@@ -1,5 +1,16 @@
 Change Log
 ==========
+Version 1.0.9 *(22-02-2015)*
+---------------------------------
+* Bug fixes
+* Add parsing of independent padding attributes (#69)
+* pstsTextAlpha value range change from 0..1 to 0..255.
+* New attr pstsTextColorSelected
+* R.id.tab_title changed to R.id.psts_tab_title
+* R.layout.tab changed to R.layout.psts_tab
+* R.drawable.background_tab changed to R.drawable.psts_background_tab
+
+
 Version 1.0.8 *(14-01-2015)*
 ----------------------------
 * Bug fixes
