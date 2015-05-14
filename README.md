@@ -38,12 +38,12 @@ Android Support Library.
          PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
          tabs.setViewPager(pager);
 
-  5. If your adapter implements the interface `CustomTabProvider` you can past you custom tab view/s.
-     In case the the view returned contains the id `R.id.psts_tab_title`, this view should be a `Textview`  and
-     will be used to placed the title. If you don't want the library manage your TextView title for the tab,
+  5. If your adapter implements the interface `CustomTabProvider` you can pass your custom tab views.
+     In case the view returned contains the id `R.id.psts_tab_title`, this view should be a `Textview`  and
+     will be used to place the title. If you don't want the library to manage your TextView title for the tab,
      use a different id than `R.id.psts_tab_title` in your tab layout.
 
-     If your adapter don't implements the interface `CustomTabProvider` the default tab will be use (That's a TextView with id `R.id.psts_tab_title`)
+     If your adapter doesn't implement the interface `CustomTabProvider` the default tab will be used (That's a TextView with id `R.id.psts_tab_title`)
 
   4. *(Optional)* If you use an `OnPageChangeListener` with your view pager
      you should set it in the widget rather than on the pager directly.
@@ -55,20 +55,20 @@ Android Support Library.
 
 From theme:
 
-* `android:textColorPrimary` value (from your theme) will be applied automatically to the tab's text color (Selected tab with 255 alpha and non selected tabs with 150 alpha) , underlineColor, dividerColor and indicatorColor, if the values are not define on the xml layout.
+* `android:textColorPrimary` value (from your theme) will be applied automatically to the tab's text color (Selected tab with 255 alpha and non selected tabs with 150 alpha) , underlineColor, dividerColor and indicatorColor, if the values are not defined in the xml layout.
 
 Notes about some of the native attr:
 
-* `android:textColor` Non selected tabs text color. If you DO define `textColor` It will be apply to **NON selected** tabs and **NO ALPHA** will be applied to them, **the colour you define is the one you will see**. If you want to define a half transparent color in `textColor`, you can pass #80FFFFFF (That's an example for half transparent white)
+* `android:textColor` Non selected tabs text color. If you DO define `textColor` It will be applied to **NON selected** tabs and **NO ALPHA** will be applied to them, **the colour you define is the one you will see**. If you want to define a half transparent color in `textColor`, you can pass #80FFFFFF (That's an example for half transparent white)
 * `android:textSize` Tab text size
-* `android:paddingLeft` or `android:paddingRight` layout padding. If you apply both, they should be balanced. PR #69 have a good explanation of this behaviour.
+* `android:paddingLeft` or `android:paddingRight` layout padding. If you apply both, they should be balanced. PR #69 has a good explanation of this behaviour.
 
 Custom attr:
 
  * `pstsIndicatorColor` Color of the sliding indicator. `textPrimaryColor` will be it's default color value.
  * `pstsUnderlineColor` Color of the full-width line on the bottom of the view. `textPrimaryColor` will be it's default color value.
  * `pstsUnderlineHeight` Height of the full-width line on the bottom of the view.
- * `pstsTextAlpha` Set the text alpha transparency for non selected tabs. Range 0..255. 150 is it's default value. It **WON'T** be use if `textColor` is defined in the layout. If `textColor` is **NOT** defined, It will be apply to the non selected tabs.
+ * `pstsTextAlpha` Set the text alpha transparency for non selected tabs. Range 0..255. 150 is it's default value. It **WON'T** be used if `textColor` is defined in the layout. If `textColor` is **NOT** defined, It will be applied to the non selected tabs.
  * `pstsTextColorSelected` Set selected tab text color. `textPrimaryColor` will be it's default color value.
  * `pstsTextStyle` Set the text style, default bold.
  * `pstsTextSelectedStyle` Set the text style of the selected tab, default bold.
