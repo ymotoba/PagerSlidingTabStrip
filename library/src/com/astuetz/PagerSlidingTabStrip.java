@@ -207,7 +207,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         dividerPaint.setAntiAlias(true);
         dividerPaint.setStrokeWidth(dividerWidth);
 
-        tabLayoutParams = shouldExpand ? new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
+        tabLayoutParams = shouldExpand ? new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1.0f)
                 : new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 
         if (locale == null) {
