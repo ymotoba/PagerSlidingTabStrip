@@ -144,7 +144,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         setWillNotDraw(false);
         tabsContainer = new LinearLayout(context);
         tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
-        tabsContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         addView(tabsContainer);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -198,7 +197,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
         tabTextColorSelected = tabTextColorSelected == null ? getColorStateList(textPrimaryColor) : tabTextColorSelected;
 
-        setMarginBottomTabContainer();
+        //Bottom padding for the tabs container parent view to show indicator and underline
+        setTabsContainerParentViewPaddings();
 
         rectPaint = new Paint();
         rectPaint.setAntiAlias(true);
@@ -216,11 +216,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
     }
 
-    private void setMarginBottomTabContainer() {
-        ViewGroup.MarginLayoutParams mlp = (MarginLayoutParams) tabsContainer.getLayoutParams();
+    private void setTabsContainerParentViewPaddings() {
         int bottomMargin = indicatorHeight >= underlineHeight ? indicatorHeight : underlineHeight;
-        mlp.setMargins(mlp.leftMargin, mlp.topMargin, mlp.rightMargin, bottomMargin);
-        tabsContainer.setLayoutParams(mlp);
+        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), bottomMargin);
     }
 
     public void setViewPager(ViewPager pager) {
