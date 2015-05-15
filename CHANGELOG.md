@@ -1,5 +1,11 @@
 Change Log
 ==========
+
+Version 1.1.0 *(?)*
+---------------------------------
+* Bug fixes
+* Default ripple effect selector in 21+
+
 Version 1.0.9 *(22-02-2015)*
 ---------------------------------
 * Bug fixes
