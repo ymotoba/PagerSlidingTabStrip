@@ -5,6 +5,8 @@ Version 1.1.0 *(?)*
 ---------------------------------
 * Bug fixes
 * Default ripple effect selector in 21+
+* Default sans-serif-medium tab's text in API 21+
+* app:pstsTextFontFamily for overriding the typeface from the XML. The attribute works exactly like android:fontFamily for TextViews.
 
 Version 1.0.9 *(22-02-2015)*
 ---------------------------------
