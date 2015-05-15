@@ -50,11 +50,11 @@ import java.util.Locale;
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     public interface CustomTabProvider {
-        public View getCustomTabView(ViewGroup parent, int position);
+        View getCustomTabView(ViewGroup parent, int position);
     }
 
     public interface OnTabReselectedListener {
-        public void onTabReselected(int position);
+        void onTabReselected(int position);
     }
 
     // @formatter:off
@@ -755,15 +755,15 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     public void setTextColorSelected(int textColor) {
-        setTextColorSelected( getColorStateList( textColor ) );
+        setTextColorSelected(getColorStateList(textColor));
     }
 
     public void setTextColorSelectedResource(int resId) {
-        setTextColorSelected( getResources().getColor( resId ) );
+        setTextColorSelected(getResources().getColor(resId));
     }
 
     public void setTextColorSelectedStateListResource(int resId) {
-        setTextColorSelected( getResources().getColorStateList( resId ) );
+        setTextColorSelected(getResources().getColorStateList(resId));
     }
 
     public void setTextColorSelected(ColorStateList colorStateList) {
