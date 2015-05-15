@@ -118,6 +118,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private boolean isPaddingMiddle = false;
 
     private Typeface tabTypeface = null;
+    private String tabTypefaceName = "sans-serif";
     private int tabTypefaceStyle = Typeface.BOLD;
     private int tabTypefaceSelectedStyle = Typeface.BOLD;
 
@@ -167,6 +168,13 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         paddingRight = padding > 0 ? padding : a.getDimensionPixelSize(PADDING_RIGHT_INDEX, 0);
         a.recycle();
 
+        // Use Roboto Medium as the default typeface from API 21 onwards
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tabTypefaceName = "sans-serif-medium";
+            tabTypefaceStyle = Typeface.NORMAL;
+            tabTypefaceSelectedStyle = Typeface.NORMAL;
+        }
+
         // get custom attrs
         a = context.obtainStyledAttributes(attrs, R.styleable.PagerSlidingTabStrip);
         indicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, indicatorColor);
@@ -182,11 +190,20 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         scrollOffset = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsScrollOffset, scrollOffset);
         textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
         isPaddingMiddle = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsPaddingMiddle, isPaddingMiddle);
-        tabTypefaceStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextStyle, Typeface.BOLD);
-        tabTypefaceSelectedStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextSelectedStyle, Typeface.BOLD);
+        tabTypefaceStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextStyle, tabTypefaceStyle);
+        tabTypefaceSelectedStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextSelectedStyle, tabTypefaceSelectedStyle);
         tabTextColorSelected = a.getColorStateList(R.styleable.PagerSlidingTabStrip_pstsTextColorSelected);
         textAlpha = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextAlpha, textAlpha);
+
+        String fontFamily = a.getString(R.styleable.PagerSlidingTabStrip_pstsTextFontFamily);
+
         a.recycle();
+
+        if (fontFamily != null) {
+            tabTypefaceName = fontFamily;
+        }
+
+        tabTypeface = Typeface.create(tabTypefaceName, tabTypefaceStyle);
 
         tabTextColor = colorStateList == null ? getColorStateList(Color.argb(textAlpha,
                 Color.red(textPrimaryColor),
