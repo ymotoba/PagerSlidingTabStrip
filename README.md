@@ -76,8 +76,9 @@ Custom attributes:
  * `pstsUnderlineHeight` Height of the full-width line on the bottom of the view.
  * `pstsTextAlpha` Set the text alpha transparency for non selected tabs. Range 0..255. 150 is it's default value. It **WON'T** be used if `textColor` is defined in the layout. If `textColor` is **NOT** defined, It will be applied to the non selected tabs.
  * `pstsTextColorSelected` Set selected tab text color. `textPrimaryColor` will be it's default color value.
- * `pstsTextStyle` Set the text style, default bold.
- * `pstsTextSelectedStyle` Set the text style of the selected tab, default bold.
+ * `pstsTextStyle` Set the text style, default normal on API 21, bold on older APIs.
+ * `pstsTextSelectedStyle` Set the text style of the selected tab, default normal on API 21, bold on older APIs.
+ * `pstsTextFontFamily` Set the font family name. Default `sans-serif-medium` on API 21, `sans-serif` on older APIs.
  * `pstsTextAllCaps` If true, all tab titles will be upper case, default true.
  * `pstsDividerColor` Color of the dividers between tabs. `textPrimaryColor` will be it's default color value.
  * `pstsDividerPadding` Top and bottom padding of the dividers.
