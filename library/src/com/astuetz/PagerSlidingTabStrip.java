@@ -801,9 +801,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         return tabTextColorSelected;
     }
 
+    //Use setTypeface(Typeface typeface, int style, int selectedStyle)
+    @Deprecated
     public void setTypeface(Typeface typeface, int style) {
+        setTypeface(typeface, style, style);
+    }
+
+    public void setTypeface(Typeface typeface, int style, int selectedStyle) {
         this.tabTypeface = typeface;
-        this.tabTypefaceSelectedStyle = style;
+        this.tabTypefaceStyle = style;
+        this.tabTypefaceSelectedStyle = selectedStyle;
         updateTabStyles();
     }
 
