@@ -429,7 +429,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         final int height = getHeight();
 
         // draw divider
-        if (dividerWidth != 0) {
+        if (dividerWidth > 0) {
             dividerPaint.setStrokeWidth(dividerWidth);
             dividerPaint.setColor(dividerColor);
             for (int i = 0; i < tabCount - 1; i++) {
@@ -439,13 +439,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
 
         // draw underline
-        rectPaint.setColor(underlineColor);
-        canvas.drawRect(paddingLeft, height - underlineHeight, tabsContainer.getWidth() + paddingRight, height, rectPaint);
+        if (underlineHeight > 0) {
+            rectPaint.setColor(underlineColor);
+            canvas.drawRect(paddingLeft, height - underlineHeight, tabsContainer.getWidth() + paddingRight, height, rectPaint);
+        }
 
         // draw indicator line
-        rectPaint.setColor(indicatorColor);
-        Pair<Float, Float> lines = getIndicatorCoordinates();
-        canvas.drawRect(lines.first + paddingLeft, height - indicatorHeight, lines.second + paddingLeft, height, rectPaint);
+        if (indicatorHeight > 0) {
+            rectPaint.setColor(indicatorColor);
+            Pair<Float, Float> lines = getIndicatorCoordinates();
+            canvas.drawRect(lines.first + paddingLeft, height - indicatorHeight, lines.second + paddingLeft, height, rectPaint);
+        }
     }
 
     public void setOnTabReselectedListener(OnTabReselectedListener tabReselectedListener) {
