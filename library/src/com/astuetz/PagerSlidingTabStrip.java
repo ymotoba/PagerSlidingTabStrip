@@ -58,7 +58,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     // @formatter:off
-    private static final int[] ATTRS = new int[]{
+    private static final int[] ANDROID_ATTRS = new int[]{
             android.R.attr.textColorPrimary,
             android.R.attr.textSize,
             android.R.attr.textColor,
@@ -108,7 +108,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int tabPadding = 12;
     private int tabTextSize = 14;
     private ColorStateList tabTextColor = null;
-    private ColorStateList tabTextColorSelected = null;
     private int textAlpha = 150;
 
     private int paddingLeft = 0;
@@ -121,7 +120,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private Typeface tabTypeface = null;
     private String tabTypefaceName = "sans-serif";
     private int tabTypefaceStyle = Typeface.BOLD;
-    private int tabTypefaceSelectedStyle = Typeface.BOLD;
 
     private int scrollOffset;
     private int lastScrollX = 0;
@@ -156,11 +154,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         tabTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, tabTextSize, dm);
 
         // get system attrs (android:textSize and android:textColor)
-        TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
-        tabTextSize = a.getDimensionPixelSize(TEXT_SIZE_INDEX, tabTextSize);
-        ColorStateList colorStateList = a.getColorStateList(TEXT_COLOR_INDEX);
+        TypedArray a = context.obtainStyledAttributes(attrs, ANDROID_ATTRS);
         int textPrimaryColor = a.getColor(TEXT_COLOR_PRIMARY, android.R.color.white);
-
+        tabTextSize = a.getDimensionPixelSize(TEXT_SIZE_INDEX, tabTextSize);
+        tabTextColor = a.hasValue(TEXT_COLOR_INDEX) ? a.getColorStateList(TEXT_COLOR_INDEX) : null;
         underlineColor = textPrimaryColor;
         dividerColor = textPrimaryColor;
         indicatorColor = textPrimaryColor;
@@ -173,7 +170,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tabTypefaceName = "sans-serif-medium";
             tabTypefaceStyle = Typeface.NORMAL;
-            tabTypefaceSelectedStyle = Typeface.NORMAL;
         }
 
         // get custom attrs
@@ -192,26 +188,22 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
         isPaddingMiddle = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsPaddingMiddle, isPaddingMiddle);
         tabTypefaceStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextStyle, tabTypefaceStyle);
-        tabTypefaceSelectedStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextSelectedStyle, tabTypefaceSelectedStyle);
-        tabTextColorSelected = a.getColorStateList(R.styleable.PagerSlidingTabStrip_pstsTextColorSelected);
-        textAlpha = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextAlpha, textAlpha);
-
         String fontFamily = a.getString(R.styleable.PagerSlidingTabStrip_pstsTextFontFamily);
-
+        textAlpha = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextAlpha, textAlpha);
         a.recycle();
 
         if (fontFamily != null) {
             tabTypefaceName = fontFamily;
         }
 
+        if (tabTextColor == null) {
+            tabTextColor = createColorStateList(textPrimaryColor, Color.argb(textAlpha,
+                    Color.red(textPrimaryColor),
+                    Color.green(textPrimaryColor),
+                    Color.blue(textPrimaryColor)), textPrimaryColor);
+        }
+
         tabTypeface = Typeface.create(tabTypefaceName, tabTypefaceStyle);
-
-        tabTextColor = colorStateList == null ? getColorStateList(Color.argb(textAlpha,
-                Color.red(textPrimaryColor),
-                Color.green(textPrimaryColor),
-                Color.blue(textPrimaryColor))) : colorStateList;
-
-        tabTextColorSelected = tabTextColorSelected == null ? getColorStateList(textPrimaryColor) : tabTextColorSelected;
 
         //Bottom padding for the tabs container parent view to show indicator and underline
         setTabsContainerParentViewPaddings();
@@ -300,6 +292,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             TextView tab_title = (TextView) v.findViewById(R.id.psts_tab_title);
 
             if (tab_title != null) {
+                tab_title.setTextColor(tabTextColor);
+                tab_title.setTypeface(tabTypeface, tabTypefaceStyle);
                 tab_title.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
                 // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
                 // pre-ICS-build
@@ -525,8 +519,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         if (tab != null) {
             TextView title = (TextView) tab.findViewById(R.id.psts_tab_title);
             if (title != null) {
-                title.setTypeface(tabTypeface, tabTypefaceStyle);
-                title.setTextColor(tabTextColor);
+                title.setSelected(false);
             }
         }
     }
@@ -535,8 +528,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         if (tab != null) {
             TextView title = (TextView) tab.findViewById(R.id.psts_tab_title);
             if (title != null) {
-                title.setTypeface(tabTypeface, tabTypefaceSelectedStyle);
-                title.setTextColor(tabTextColorSelected);
+                title.setSelected(true);
             }
         }
     }
@@ -759,12 +751,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         updateTabStyles();
     }
 
-    public void setTextColor(int textColor) {
-        setTextColor(getColorStateList(textColor));
+    public void setTextColorResource(int resId) {
+        setTextColor(getResources().getColor(resId));
     }
 
-    private ColorStateList getColorStateList(int textColor) {
-        return new ColorStateList(new int[][]{new int[]{}}, new int[]{textColor});
+    public void setTextColor(int textColor) {
+        setTextColor(createColorStateList(textColor));
+    }
+
+    public void setTextColorStateListResource(int resId) {
+        setTextColor(getResources().getColorStateList(resId));
     }
 
     public void setTextColor(ColorStateList colorStateList) {
@@ -772,45 +768,18 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         updateTabStyles();
     }
 
-    public void setTextColorResource(int resId) {
-        setTextColor(getResources().getColor(resId));
+    private ColorStateList createColorStateList(int textColor) {
+        return new ColorStateList(new int[][]{new int[]{}}, new int[]{textColor});
     }
 
-    public void setTextColorStateListResource(int resId) {
-        setTextColor(getResources().getColorStateList(resId));
+    private ColorStateList createColorStateList(int state_selected, int state_focused, int state_default) {
+        //TODO
+        return null;
     }
 
-    public void setTextColorSelected(int textColor) {
-        setTextColorSelected(getColorStateList(textColor));
-    }
-
-    public void setTextColorSelectedResource(int resId) {
-        setTextColorSelected(getResources().getColor(resId));
-    }
-
-    public void setTextColorSelectedStateListResource(int resId) {
-        setTextColorSelected(getResources().getColorStateList(resId));
-    }
-
-    public void setTextColorSelected(ColorStateList colorStateList) {
-        this.tabTextColorSelected = colorStateList;
-        updateTabStyles();
-    }
-
-    public ColorStateList getTextColorSelectedStateList() {
-        return tabTextColorSelected;
-    }
-
-    //Use setTypeface(Typeface typeface, int style, int selectedStyle)
-    @Deprecated
     public void setTypeface(Typeface typeface, int style) {
-        setTypeface(typeface, style, style);
-    }
-
-    public void setTypeface(Typeface typeface, int style, int selectedStyle) {
         this.tabTypeface = typeface;
         this.tabTypefaceStyle = style;
-        this.tabTypefaceSelectedStyle = selectedStyle;
         updateTabStyles();
     }
 
