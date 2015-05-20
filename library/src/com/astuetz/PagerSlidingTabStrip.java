@@ -51,6 +51,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     public interface CustomTabProvider {
         View getCustomTabView(ViewGroup parent, int position);
+
+        void tabSelected(View tab);
+
+        void tabUnselected(View tab);
     }
 
     public interface OnTabReselectedListener {
@@ -60,8 +64,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     // @formatter:off
     private static final int[] ANDROID_ATTRS = new int[]{
             android.R.attr.textColorPrimary,
-            android.R.attr.textSize,
-            android.R.attr.textColor,
             android.R.attr.padding,
             android.R.attr.paddingLeft,
             android.R.attr.paddingRight,
@@ -72,11 +74,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     //These indexes must be related with the ATTR array above
     private static final int TEXT_COLOR_PRIMARY = 0;
-    private static final int TEXT_SIZE_INDEX = 1;
-    private static final int TEXT_COLOR_INDEX = 2;
-    private static final int PADDING_INDEX = 3;
-    private static final int PADDING_LEFT_INDEX = 4;
-    private static final int PADDING_RIGHT_INDEX = 5;
+    private static final int PADDING_INDEX = 1;
+    private static final int PADDING_LEFT_INDEX = 2;
+    private static final int PADDING_RIGHT_INDEX = 3;
 
     private LinearLayout.LayoutParams tabLayoutParams;
 
@@ -116,6 +116,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private boolean shouldExpand = false;
     private boolean textAllCaps = true;
     private boolean isPaddingMiddle = false;
+    private boolean isCustomTabs;
 
     private Typeface tabTypeface = null;
     private String tabTypefaceName = "sans-serif";
@@ -144,6 +145,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
         addView(tabsContainer);
 
+        rectPaint = new Paint();
+        rectPaint.setAntiAlias(true);
+        rectPaint.setStyle(Style.FILL);
+
         DisplayMetrics dm = getResources().getDisplayMetrics();
         scrollOffset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, scrollOffset, dm);
         indicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, indicatorHeight, dm);
@@ -153,11 +158,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         dividerWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dividerWidth, dm);
         tabTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, tabTextSize, dm);
 
-        // get system attrs (android:textSize and android:textColor)
+        dividerPaint = new Paint();
+        dividerPaint.setAntiAlias(true);
+        dividerPaint.setStrokeWidth(dividerWidth);
+
+        if (locale == null) {
+            locale = getResources().getConfiguration().locale;
+        }
+
+        // get system attrs for container
         TypedArray a = context.obtainStyledAttributes(attrs, ANDROID_ATTRS);
         int textPrimaryColor = a.getColor(TEXT_COLOR_PRIMARY, android.R.color.white);
-        tabTextSize = a.getDimensionPixelSize(TEXT_SIZE_INDEX, tabTextSize);
-        tabTextColor = a.hasValue(TEXT_COLOR_INDEX) ? a.getColorStateList(TEXT_COLOR_INDEX) : null;
         underlineColor = textPrimaryColor;
         dividerColor = textPrimaryColor;
         indicatorColor = textPrimaryColor;
@@ -172,56 +183,50 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             tabTypefaceStyle = Typeface.NORMAL;
         }
 
-        // get custom attrs
+        // get custom attrs for tabs
         a = context.obtainStyledAttributes(attrs, R.styleable.PagerSlidingTabStrip);
         indicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, indicatorColor);
+        indicatorHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorHeight, indicatorHeight);
         underlineColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsUnderlineColor, underlineColor);
+        underlineHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsUnderlineHeight, underlineHeight);
         dividerColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsDividerColor, dividerColor);
         dividerWidth = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsDividerWidth, dividerWidth);
-        indicatorHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorHeight, indicatorHeight);
-        underlineHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsUnderlineHeight, underlineHeight);
         dividerPadding = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsDividerPadding, dividerPadding);
-        tabPadding = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsTabPaddingLeftRight, tabPadding);
-        tabBackgroundResId = a.getResourceId(R.styleable.PagerSlidingTabStrip_pstsTabBackground, tabBackgroundResId);
         shouldExpand = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsShouldExpand, shouldExpand);
         scrollOffset = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsScrollOffset, scrollOffset);
-        textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
         isPaddingMiddle = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsPaddingMiddle, isPaddingMiddle);
-        tabTypefaceStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextStyle, tabTypefaceStyle);
-        String fontFamily = a.getString(R.styleable.PagerSlidingTabStrip_pstsTextFontFamily);
-        textAlpha = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTextAlpha, textAlpha);
+        tabPadding = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsTabPaddingLeftRight, tabPadding);
+        tabBackgroundResId = a.getResourceId(R.styleable.PagerSlidingTabStrip_pstsTabBackground, tabBackgroundResId);
+        tabTextSize = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsTabTextSize, tabTextSize);
+        tabTextColor = a.hasValue(R.styleable.PagerSlidingTabStrip_pstsTabTextColor) ? a.getColorStateList(R.styleable.PagerSlidingTabStrip_pstsTabTextColor) : null;
+        tabTypefaceStyle = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTabTextStyle, tabTypefaceStyle);
+        textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTabTextAllCaps, textAllCaps);
+        textAlpha = a.getInt(R.styleable.PagerSlidingTabStrip_pstsTabTextAlpha, textAlpha);
+        String fontFamily = a.getString(R.styleable.PagerSlidingTabStrip_pstsTabTextFontFamily);
         a.recycle();
 
+        //Tab text color selector
+        if (tabTextColor == null) {
+            tabTextColor = createColorStateList(
+                    textPrimaryColor,
+                    textPrimaryColor,
+                    Color.argb(textAlpha,
+                            Color.red(textPrimaryColor),
+                            Color.green(textPrimaryColor),
+                            Color.blue(textPrimaryColor)));
+        }
+
+        //Tab text typeface and style
         if (fontFamily != null) {
             tabTypefaceName = fontFamily;
         }
-
-        if (tabTextColor == null) {
-            tabTextColor = createColorStateList(textPrimaryColor, Color.argb(textAlpha,
-                    Color.red(textPrimaryColor),
-                    Color.green(textPrimaryColor),
-                    Color.blue(textPrimaryColor)), textPrimaryColor);
-        }
-
         tabTypeface = Typeface.create(tabTypefaceName, tabTypefaceStyle);
 
         //Bottom padding for the tabs container parent view to show indicator and underline
         setTabsContainerParentViewPaddings();
 
-        rectPaint = new Paint();
-        rectPaint.setAntiAlias(true);
-        rectPaint.setStyle(Style.FILL);
-
-        dividerPaint = new Paint();
-        dividerPaint.setAntiAlias(true);
-        dividerPaint.setStrokeWidth(dividerWidth);
-
         tabLayoutParams = shouldExpand ? new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 1.0f)
                 : new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-
-        if (locale == null) {
-            locale = getResources().getConfiguration().locale;
-        }
     }
 
     private void setTabsContainerParentViewPaddings() {
@@ -235,6 +240,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
 
+        isCustomTabs = pager.getAdapter() instanceof CustomTabProvider;
         pager.setOnPageChangeListener(pageListener);
         pager.getAdapter().registerDataSetObserver(adapterObserver);
         adapterObserver.setAttached(true);
@@ -247,7 +253,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         View tabView;
         for (int i = 0; i < tabCount; i++) {
 
-            if (pager.getAdapter() instanceof CustomTabProvider) {
+            if (isCustomTabs) {
                 tabView = ((CustomTabProvider) pager.getAdapter()).getCustomTabView(this, i);
             } else {
                 tabView = LayoutInflater.from(getContext()).inflate(R.layout.psts_tab, this, false);
@@ -517,19 +523,21 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     private void notSelected(View tab) {
         if (tab != null) {
-            TextView title = (TextView) tab.findViewById(R.id.psts_tab_title);
-            if (title != null) {
-                title.setSelected(false);
+            TextView tab_title = (TextView) tab.findViewById(R.id.psts_tab_title);
+            if (tab_title != null) {
+                tab_title.setSelected(false);
             }
+            if (isCustomTabs) ((CustomTabProvider) pager.getAdapter()).tabUnselected(tab);
         }
     }
 
     private void selected(View tab) {
         if (tab != null) {
-            TextView title = (TextView) tab.findViewById(R.id.psts_tab_title);
-            if (title != null) {
-                title.setSelected(true);
+            TextView tab_title = (TextView) tab.findViewById(R.id.psts_tab_title);
+            if (tab_title != null) {
+                tab_title.setSelected(true);
             }
+            if (isCustomTabs) ((CustomTabProvider) pager.getAdapter()).tabSelected(tab);
         }
     }
 
@@ -768,13 +776,30 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         updateTabStyles();
     }
 
-    private ColorStateList createColorStateList(int textColor) {
-        return new ColorStateList(new int[][]{new int[]{}}, new int[]{textColor});
+    private ColorStateList createColorStateList(int color_state_default) {
+        return new ColorStateList(
+                new int[][]{
+                        new int[]{} //default
+                },
+                new int[]{
+                        color_state_default //default
+                }
+        );
     }
 
-    private ColorStateList createColorStateList(int state_selected, int state_focused, int state_default) {
-        //TODO
-        return null;
+    private ColorStateList createColorStateList(int color_state_pressed, int color_state_selected, int color_state_default) {
+        return new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_pressed}, //pressed
+                        new int[]{android.R.attr.state_selected}, // enabled
+                        new int[]{} //default
+                },
+                new int[]{
+                        color_state_pressed,
+                        color_state_selected,
+                        color_state_default
+                }
+        );
     }
 
     public void setTypeface(Typeface typeface, int style) {

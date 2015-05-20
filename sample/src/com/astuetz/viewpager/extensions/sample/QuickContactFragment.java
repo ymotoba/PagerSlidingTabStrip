@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.balysv.materialripple.MaterialRippleLayout;
 
 import static com.astuetz.PagerSlidingTabStrip.CustomTabProvider;
 
@@ -125,9 +123,19 @@ public class QuickContactFragment extends DialogFragment {
 
         @Override
         public View getCustomTabView(ViewGroup parent, int position) {
-            MaterialRippleLayout materialRippleLayout = (MaterialRippleLayout) LayoutInflater.from(mContext).inflate(R.layout.custom_tab, parent, false);
-            ((ImageView)materialRippleLayout.findViewById(R.id.image)).setImageResource(ICONS[position]);
-            return materialRippleLayout;
+            View tab = LayoutInflater.from(mContext).inflate(R.layout.custom_tab, parent, false);
+            ((ImageView) tab.findViewById(R.id.image)).setImageResource(ICONS[position]);
+            return tab;
+        }
+
+        @Override
+        public void tabSelected(View tab) {
+
+        }
+
+        @Override
+        public void tabUnselected(View tab) {
+
         }
     }
 }
