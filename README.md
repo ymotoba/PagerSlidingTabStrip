@@ -42,7 +42,7 @@ Or add the library as a project. I tried to send a pull request, but looks like 
 
 ###That's all you need to do, but if you want to use your own tabs, then....
 
-4. If your adapter implements the interface `CustomTabProvider` you can paste your custom tab view/s.
+4.If your adapter implements the interface `CustomTabProvider` you can paste your custom tab view/s.
 
      - In case the the view returned contains the id `R.id.psts_tab_title`, this view should be a `TextView`  and
      will be used to placed the title and set the view state (pressed/selected/default).
