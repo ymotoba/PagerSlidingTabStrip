@@ -8,16 +8,17 @@ Android Support Library.
 
 # Usage
 
-*For a working implementation of this project see the `sample/` folder.*
+For a working implementation of this project see the `sample/` folder.
 
-  1. Include the following dependency in your `build.gradle` file.
+1.Include the following dependency in your `build.gradle` file.
 
 ```groovy
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
 ```
-  Or add the library as a project. I tried to send a pull request, but looks like the original developer doesn't maintain it anymore.
 
-  2. Include the `PagerSlidingTabStrip` widget in your layout. This should usually be placed above the `ViewPager` it represents.
+Or add the library as a project. I tried to send a pull request, but looks like the original developer doesn't maintain it anymore.
+
+2.Include the `PagerSlidingTabStrip` widget in your layout. This should usually be placed above the `ViewPager` it represents.
 
 ```xml
     <com.astuetz.PagerSlidingTabStrip
@@ -27,7 +28,7 @@ Android Support Library.
         android:background="?attr/colorPrimary" />
 ```
 
-  3. In your `onCreate` method (or `onCreateView` for a fragment), bind the widget to the `ViewPager`:
+3.In your `onCreate` method (or `onCreateView` for a fragment), bind the widget to the `ViewPager`:
 
 ```java
   // Initialize the ViewPager and set an adapter
@@ -39,7 +40,9 @@ Android Support Library.
   tabs.setViewPager(pager);
 ```
 
-  5. If your adapter implements the interface `CustomTabProvider` you can paste your custom tab view/s.
+###That's all you need to do, but if you want to use your own tabs, then....
+
+4. If your adapter implements the interface `CustomTabProvider` you can paste your custom tab view/s.
 
      - In case the the view returned contains the id `R.id.psts_tab_title`, this view should be a `TextView`  and
      will be used to placed the title and set the view state (pressed/selected/default).
@@ -50,7 +53,7 @@ Android Support Library.
 
      - If your adapter doesn't implement the interface `CustomTabProvider` the default tab will be used, which is a `TextView` with id `R.id.psts_tab_title`).
 
-  4. *(Optional)* If you use an `OnPageChangeListener` with your view pager
+5.*(Optional)* If you use an `OnPageChangeListener` with your view pager
      you should set it in the widget rather than on the pager directly.
 
 ```java
@@ -101,7 +104,7 @@ Custom attributes:
 
 # Contributions
 
- * Please, read the readme file before opening an issue, thanks.
+ * Please, read the README file before opening an issue, thanks.
  * Please, all the Pull Request must be sent to the dev branch, thanks..
 
 # Credits
