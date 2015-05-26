@@ -255,7 +255,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             public void onClick(View v) {
                 if (mPager.getCurrentItem() != position) {
                     View tab = mTabsContainer.getChildAt(mPager.getCurrentItem());
-                    notSelected(tab);
+                    unSelect(tab);
                     mPager.setCurrentItem(position);
                 } else if (mTabReselectedListener != null) {
                     mTabReselectedListener.onTabReselected(position);
@@ -451,17 +451,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             }
             //Full tabTextAlpha for current item
             View currentTab = mTabsContainer.getChildAt(mPager.getCurrentItem());
-            selected(currentTab);
+            select(currentTab);
             //Half transparent for prev item
             if (mPager.getCurrentItem() - 1 >= 0) {
                 View prevTab = mTabsContainer.getChildAt(mPager.getCurrentItem() - 1);
-                notSelected(prevTab);
+                unSelect(prevTab);
             }
 
             //Half transparent for next item
             if (mPager.getCurrentItem() + 1 <= mPager.getAdapter().getCount() - 1) {
                 View nextTab = mTabsContainer.getChildAt(mPager.getCurrentItem() + 1);
-                notSelected(nextTab);
+                unSelect(nextTab);
             }
 
             if (mDelegatePageListener != null) {
@@ -483,16 +483,15 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         for (int i = 0; i < mTabCount; ++i) {
             View tv = mTabsContainer.getChildAt(i);
             final boolean selected = i == position;
-            tv.setSelected(selected);
             if (selected) {
-                selected(tv);
+                select(tv);
             } else {
-                notSelected(tv);
+                unSelect(tv);
             }
         }
     }
 
-    private void notSelected(View tab) {
+    private void unSelect(View tab) {
         if (tab != null) {
             TextView tab_title = (TextView) tab.findViewById(R.id.psts_tab_title);
             if (tab_title != null) {
@@ -502,7 +501,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
     }
 
-    private void selected(View tab) {
+    private void select(View tab) {
         if (tab != null) {
             TextView tab_title = (TextView) tab.findViewById(R.id.psts_tab_title);
             if (tab_title != null) {
@@ -558,8 +557,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         super.onRestoreInstanceState(savedState.getSuperState());
         mCurrentPosition = savedState.currentPosition;
         if (mCurrentPosition != 0 && mTabsContainer.getChildCount() > 0) {
-            notSelected(mTabsContainer.getChildAt(0));
-            selected(mTabsContainer.getChildAt(mCurrentPosition));
+            unSelect(mTabsContainer.getChildAt(0));
+            select(mTabsContainer.getChildAt(mCurrentPosition));
         }
         requestLayout();
     }
