@@ -95,8 +95,8 @@ Custom attributes:
 
 # Developed By
 
+ * Javier Pardo de Santayana Gomez - [jpardogo.com](http://www.jpardogo.com) - <jpardogo@gmail.com>
  * Andreas Stuetz - <andreas.stuetz@gmail.com>
- * Javier Pardo de Santayana Gomez - <jpardogo@gmail.com>
  * And contributors.
 
 # Contributions
