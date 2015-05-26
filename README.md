@@ -69,7 +69,7 @@ From theme:
 
 Notes about some of the native attributes:
 
- * `android:paddingLeft` or `android:paddingRight` layout padding. If you apply both, they should be balanced. PR #69 has a good explanation of this behaviour.
+ * `android:paddingLeft` or `android:paddingRight` layout padding. If you apply both, they should be balanced. Check issue [#69](https://github.com/jpardogo/PagerSlidingTabStrip/pull/69) for more information.
 
 Custom attributes:
 
@@ -86,15 +86,17 @@ Custom attributes:
  * `pstsTabPaddingLeftRight` Left and right padding of each tab.
  * `pstsTabBackground` Background drawable of each tab, should be a StateListDrawable.
  * `pstsTabTextSize` Tab text size (sp).
- * `pstsTabTextColor` Tab text color that can either be a color (text color won't changed) or a selector with a color defined per state : pressed (tab pressed), selected (tab active), default(active non active) (The order of states in the selector is important).
- * `pstsTextColorSelected` Set selected tab text color. `textPrimaryColor` will be it's default color value.
+ * `pstsTabTextColor` Tab text color that can either be a color (text color won't changed) or a selector with a color per state: pressed (tab pressed), selected (tab active), default (active non active). The order of states in the selector is important. Check issue [#68](https://github.com/jpardogo/PagerSlidingTabStrip/pull/70) for more information.
  * `pstsTabTextStyle` Set the text style, default normal on API 21, bold on older APIs.
  * `pstsTabTextAllCaps` If true, all tab titles will be upper case, default true.
  * `pstsTabTextAlpha` Set the text alpha transparency for non selected tabs. Range 0..255. 150 is it's default value. It **WON'T** be used if `pstsTabTextColor` is defined in the layout. If `pstsTabTextColor` is **NOT** defined, It will be applied to the non selected tabs.
  * `pstsTabTextFontFamily` Set the font family name. Default `sans-serif-medium` on API 21, `sans-serif` on older APIs.
 
+Almost all attributes have their respective getters and setters to change them at runtime. To change dynamically `pstsTabTextFontFamily` and  `pstsTabTextStyle` you can call:
 
-*Almost all attributes have their respective getters and setters to change them at runtime*. Please open an issue if you find any are missing.
+ * `public void setTypeface(Typeface typeface, int style)`. It can be used to define custom fonts in default tabs. Otherwise you can use custom tabs with `CustomTabProvider`.
+
+Please open an issue if you find any are missing.
 
 # Developed By
 
