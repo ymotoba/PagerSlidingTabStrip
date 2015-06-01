@@ -9,8 +9,5 @@
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
-    <style name="AppTheme" parent="AppBaseTheme">
-
-    </style>
-
+    <style name="AppTheme" parent="AppBaseTheme" />
 </resources>

@@ -22,13 +22,8 @@ import static com.astuetz.PagerSlidingTabStrip.CustomTabProvider;
 
 public class QuickContactFragment extends DialogFragment {
 
-    private PagerSlidingTabStrip tabs;
-    private ViewPager pager;
-    private ContactPagerAdapter adapter;
-
     public static QuickContactFragment newInstance() {
-        QuickContactFragment quickContactFragment = new QuickContactFragment();
-        return quickContactFragment;
+        return new QuickContactFragment();
     }
 
     @Override
@@ -40,15 +35,11 @@ public class QuickContactFragment extends DialogFragment {
         }
 
         View root = inflater.inflate(R.layout.fragment_quick_contact, container, false);
-
-        tabs = (PagerSlidingTabStrip) root.findViewById(R.id.tabs);
-        pager = (ViewPager) root.findViewById(R.id.pager);
-        adapter = new ContactPagerAdapter(getActivity());
-
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) root.findViewById(R.id.tabs);
+        ViewPager pager = (ViewPager) root.findViewById(R.id.pager);
+        ContactPagerAdapter adapter = new ContactPagerAdapter(getActivity());
         pager.setAdapter(adapter);
-
         tabs.setViewPager(pager);
-
         return root;
     }
 
@@ -59,9 +50,7 @@ public class QuickContactFragment extends DialogFragment {
 
         // change dialog width
         if (getDialog() != null) {
-
-            int fullWidth = getDialog().getWindow().getAttributes().width;
-
+            int fullWidth;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
                 Display display = getActivity().getWindowManager().getDefaultDisplay();
                 Point size = new Point();
@@ -74,18 +63,27 @@ public class QuickContactFragment extends DialogFragment {
 
             final int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
                     .getDisplayMetrics());
-
             int w = fullWidth - padding;
             int h = getDialog().getWindow().getAttributes().height;
-
             getDialog().getWindow().setLayout(w, h);
         }
     }
 
     public static class ContactPagerAdapter extends PagerAdapter implements CustomTabProvider {
 
-        private final int[] ICONS = {R.drawable.ic_launcher_gplus, R.drawable.ic_launcher_gmail,
-                R.drawable.ic_launcher_gmaps, R.drawable.ic_launcher_chrome};
+        private final int[] ICONS = {
+                R.drawable.ic_launcher_gplus,
+                R.drawable.ic_launcher_gmail,
+                R.drawable.ic_launcher_gmaps,
+                R.drawable.ic_launcher_chrome
+        };
+        private final String[] TITLES = {
+                "GPlus",
+                "GMail",
+                "GMaps",
+                "GChrome"
+        };
+
         private final Context mContext;
 
         public ContactPagerAdapter(Context context) {
@@ -100,13 +98,13 @@ public class QuickContactFragment extends DialogFragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return super.getPageTitle(position);
+            return TITLES[position];
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            TextView textview= (TextView) LayoutInflater.from(mContext).inflate(R.layout.fragment_quickcontact,container,false);
-            textview.setText("PAGE "+position);
+            TextView textview = (TextView) LayoutInflater.from(mContext).inflate(R.layout.fragment_quickcontact, container, false);
+            textview.setText("PAGE " + position);
             container.addView(textview);
             return textview;
         }
@@ -130,12 +128,12 @@ public class QuickContactFragment extends DialogFragment {
 
         @Override
         public void tabSelected(View tab) {
-
+            //Callback with the tab on his selected state. It is up to the developer to change anything on it.
         }
 
         @Override
         public void tabUnselected(View tab) {
-
+            //Callback with the tab on his unselected state. It is up to the developer to change anything on it.
         }
     }
 }
