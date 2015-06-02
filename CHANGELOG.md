@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 1.1.0 *(?)*
+Version 1.1.0 *(01-06-215)*
 ---------------------------------
 * Bug fixes
 * Rename some custom attributes.
