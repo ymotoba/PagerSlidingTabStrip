@@ -4,4 +4,10 @@
         <item name="android:dialogTheme">@style/DialogStyle</item>
     </style>
 
+    <style name="ThemeOverlay.App.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
 </resources>
