@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -23,6 +24,7 @@ public class LinearLayoutFeedback extends LinearLayout {
         this(context, attrs, 0);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public LinearLayoutFeedback(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray a = getContext().obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground});
@@ -41,7 +43,7 @@ public class LinearLayoutFeedback extends LinearLayout {
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    protected void dispatchDraw(@NonNull Canvas canvas) {
         super.dispatchDraw(canvas);
         mForegroundDrawable.draw(canvas);
     }
