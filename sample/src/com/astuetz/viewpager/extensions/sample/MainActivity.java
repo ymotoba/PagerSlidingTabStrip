@@ -89,14 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_contact:
-                QuickContactFragment.newInstance().show(getSupportFragmentManager(), "QuickContactFragment");
-                return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Toolbar、タブの色を変更する
+     * @param newColor
+     */
     private void changeColor(int newColor) {
         tabs.setBackgroundColor(newColor);
         mTintManager.setTintColor(newColor);
@@ -116,11 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
         oldBackground = ld;
         currentColor = newColor;
-    }
-
-    public void onColorClicked(View v) {
-        int color = Color.parseColor(v.getTag().toString());
-        changeColor(color);
     }
 
     @Override

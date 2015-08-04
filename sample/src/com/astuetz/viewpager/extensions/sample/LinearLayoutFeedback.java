@@ -68,6 +68,7 @@ public class LinearLayoutFeedback extends LinearLayout {
         return super.verifyDrawable(who) || (who == mForegroundDrawable);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
